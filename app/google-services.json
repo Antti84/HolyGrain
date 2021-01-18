@@ -1,0 +1,270 @@
+{
+  "project_info": {
+    "project_number": "22266388440",
+    "firebase_url": "https://holygrain-9d415.firebaseio.com",
+    "project_id": "holygrain-9d415",
+    "storage_bucket": "holygrain-9d415.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22266388440:android:03d27215f14701e2e69cad",
+        "android_client_info": {
+          "package_name": "com.anttihemminki.test_game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22266388440-e42usvf0788sg959k4eqksdgkb6m7t3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anttihemminki.test_game",
+            "certificate_hash": "cca8024e4db5a8eac25eafc09c13f0db051d4dba"
+          }
+        },
+        {
+          "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdPXELsSOG0Vo7An7tpT_ZuoJfIpK8UDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22266388440:android:b5af6a5234880835",
+        "android_client_info": {
+          "package_name": "com.hemminkiantti.holygrain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22266388440-cklepbp7kamcpard3dqf8lmhh9ip0onb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hemminkiantti.holygrain",
+            "certificate_hash": "cca8024e4db5a8eac25eafc09c13f0db051d4dba"
+          }
+        },
+        {
+          "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdPXELsSOG0Vo7An7tpT_ZuoJfIpK8UDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22266388440:android:a735b17bede5ce54e69cad",
+        "android_client_info": {
+          "package_name": "fi.anttihemminki.android.holygraindistancestudy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdPXELsSOG0Vo7An7tpT_ZuoJfIpK8UDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22266388440:android:cf1c164b885e98c6",
+        "android_client_info": {
+          "package_name": "fi.anttihemminki.games.holygrain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22266388440-jvh3h0s6rlvd7sfdftbb3ackjsdl4lph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fi.anttihemminki.games.holygrain",
+            "certificate_hash": "cca8024e4db5a8eac25eafc09c13f0db051d4dba"
+          }
+        },
+        {
+          "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdPXELsSOG0Vo7An7tpT_ZuoJfIpK8UDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22266388440:android:f65db0ccf998b737e69cad",
+        "android_client_info": {
+          "package_name": "fi.anttihemminki.holycamera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22266388440-gagvfvfpa9htni23p1cu8mjtfsp8msbn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fi.anttihemminki.holycamera",
+            "certificate_hash": "cca8024e4db5a8eac25eafc09c13f0db051d4dba"
+          }
+        },
+        {
+          "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdPXELsSOG0Vo7An7tpT_ZuoJfIpK8UDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22266388440:android:0a70cfc16afacb21e69cad",
+        "android_client_info": {
+          "package_name": "fi.anttihemminki.holygrain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22266388440-5i2kl4euqs4kdgmc17juerm81thnkgus.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fi.anttihemminki.holygrain",
+            "certificate_hash": "ea0d5e22d455263757da887d6ad98ebf317c3c92"
+          }
+        },
+        {
+          "client_id": "22266388440-pir0pmqt7bvtsmbcppd7tehje0f1irdk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fi.anttihemminki.holygrain",
+            "certificate_hash": "cca8024e4db5a8eac25eafc09c13f0db051d4dba"
+          }
+        },
+        {
+          "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdPXELsSOG0Vo7An7tpT_ZuoJfIpK8UDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22266388440:android:0b3a9dc8203f28b0",
+        "android_client_info": {
+          "package_name": "fi.anttihemminki.holygrain.holygrain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22266388440-3dkcv9u945no4bpi8gm8i2karrmgkb0t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fi.anttihemminki.holygrain.holygrain",
+            "certificate_hash": "cca8024e4db5a8eac25eafc09c13f0db051d4dba"
+          }
+        },
+        {
+          "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdPXELsSOG0Vo7An7tpT_ZuoJfIpK8UDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22266388440-dd8doltlefkmn1tj0bogm3jdgh76ks31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
