@@ -5,17 +5,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import com.google.gson.Gson
 
 const val HOLY_TAG = "HolyGrain"
 
+lateinit var ACTIVE_ACTIVITY: AppCompatActivity
+
 abstract class HolyActivity : AppCompatActivity() {
 
+    val gson = Gson()
     val screen = Screen()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        ACTIVE_ACTIVITY = this
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
