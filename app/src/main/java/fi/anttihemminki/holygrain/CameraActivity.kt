@@ -4,19 +4,26 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.face.*
-import fi.anttihemminki.holygrain.databinding.DistanceActivityBinding
+import fi.anttihemminki.holygrain.databinding.CameraActivityBinding
 import fi.anttihemminki.holygrain.facedistance.*
 
-open class CameraActivity : HolyActivity() {
+open class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInterface {
 
-    private lateinit var binding: DistanceActivityBinding
+    lateinit var binding: CameraActivityBinding
 
     private lateinit var distanceMeter: DistanceMeter
+
+    lateinit var cameraView: ImageView
+    lateinit var testTextView: TextView
+
+    var freezeFaceImage = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,12 +33,14 @@ open class CameraActivity : HolyActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
-        binding = DistanceActivityBinding.inflate(layoutInflater)
-
+        binding = CameraActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        cameraView = binding.cameraImageView
+        testTextView = binding.testTextView
+
         distanceMeter = DistanceMeter(this)
-        distanceMeter.imageDataReceiver = receiver
+        distanceMeter.imageDataReceiver = this
         distanceMeter.startCamera()
     }
 
@@ -69,43 +78,47 @@ open class CameraActivity : HolyActivity() {
         if(bmp != null) {
             bmp = bmp.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
             this.runOnUiThread {
-                binding.cameraImageView.setImageBitmap(bmp)
+                cameraView.setImageBitmap(bmp)
             }
         }
     }
 
-    private val receiver: DistanceReceiverInterface = object: DistanceImageAndDataReceiverInterface {
-        @SuppressLint("SetTextI18n")
-        override fun receiveFaceImage(image: ImageProxy, time: Long) {
-            if (time > 0) {
-                val now = System.currentTimeMillis()
-                binding.testTextView.text = "$now - $time = ${now - time}"
-            }
-            setImageToLayout(image)
+    @SuppressLint("SetTextI18n")
+    override fun receiveFaceImage(image: ImageProxy, time: Long) {
+        if (time > 0) {
+            val now = System.currentTimeMillis()
+            testTextView.text = "$now - $time = ${now - time}"
         }
+        if(!freezeFaceImage)
+            setImageToLayout(image)
+    }
 
-        override fun receiveFaceImageAndData(image: ImageProxy, faces: MutableList<Face>, time: Long) {
+    var drawDotsToImage = false
+    override fun receiveFaceImageAndData(image: ImageProxy, faces: MutableList<Face>, time: Long) {
 
+        if(!freezeFaceImage && drawDotsToImage) {
             var bmp = imageProxyToBitmap(image)
-            if(bmp != null) {
-                for(face in faces) {
+            if (bmp != null) {
+                for (face in faces) {
                     bmp = drawFacePointsToBitmap(bmp!!, face)
                 }
-                bmp = bmp!!.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
+                bmp = bmp!!.flip(-1f, 1f, bmp.width / 2f, bmp.height / 2f)
                 runOnUiThread {
-                    binding.cameraImageView.setImageBitmap(bmp)
+                    cameraView.setImageBitmap(bmp)
                 }
             }
-
-            //
-            receiveFaceData(faces, time)
+        } else {
+            receiveFaceImage(image, -1)
         }
 
-        @SuppressLint("SetTextI18n")
-        override fun receiveFaceData(faces: MutableList<Face>, time: Long) {
-            val now = System.currentTimeMillis()
-            val s = "$now - $time = ${now - time}"
-            binding.testTextView.text = s + "\n" + "Num faces: ${faces.size}"
-        }
+        //
+        receiveFaceData(faces, time)
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun receiveFaceData(faces: MutableList<Face>, time: Long) {
+        val now = System.currentTimeMillis()
+        val s = "$now - $time = ${now - time}"
+        testTextView.text = s + "\n" + "Num faces: ${faces.size}"
     }
 }

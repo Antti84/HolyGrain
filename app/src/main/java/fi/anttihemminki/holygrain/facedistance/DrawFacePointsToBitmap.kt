@@ -29,11 +29,15 @@ fun drawFacePointsToBitmap(image: Bitmap, face: Face): Bitmap {
     paint.strokeWidth = 2F
     paint.style = Paint.Style.STROKE
 
-    val facePoints = ArrayList<FacePoint>()
+    val facePoints = getFacePoints(face)
 
     canvas.drawRect(face.boundingBox, paint)
 
-    for(landmark in landmarks) {
+    for(p in facePoints) {
+        canvas.drawPoint(p.coords.x, p.coords.y, paint)
+    }
+
+    /*for(landmark in landmarks) {
         val lm = face.getLandmark(landmark)
         lm?.let {
             canvas.drawPoint(lm.position.x, lm.position.y, paint)
@@ -67,7 +71,32 @@ fun drawFacePointsToBitmap(image: Bitmap, face: Face): Bitmap {
             face.rightEyeOpenProbability!!,
             face.leftEyeOpenProbability!!,
             facePoints
-    )
+    )*/
 
     return bitmap
+}
+
+fun getFacePoints(face: Face): ArrayList<FacePoint> {
+    val facePoints = ArrayList<FacePoint>()
+
+    for(landmark in landmarks) {
+        val lm = face.getLandmark(landmark)
+        lm?.let {
+            val fp = FacePoint(lm.position, landmark, FacePointType.LANDMARK, -1)
+            facePoints.add(fp)
+        }
+    }
+
+    for(contour in contours) {
+        val contData = face.getContour(contour)?.points
+        if (contData != null) {
+            for((index, point) in contData.withIndex()) {
+                val fp = FacePoint(point, contour, FacePointType.CONTOUR, index)
+                facePoints.add(fp)
+
+            }
+        }
+    }
+
+    return facePoints
 }

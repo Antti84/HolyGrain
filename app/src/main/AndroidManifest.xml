@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HolyGrain"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CameraActivity">
+        <activity android:name=".distancestudy.DistanceStudyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
