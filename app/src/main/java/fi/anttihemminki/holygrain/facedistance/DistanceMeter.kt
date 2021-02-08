@@ -9,10 +9,10 @@ class DistanceMeter(activity: AppCompatActivity) : HolyCameraReveiceImageInterfa
     val camera = HolyCamera(activity)
     val faceDetector = HolyFaceDetector()
     var imageDataReceiver: DistanceReceiverInterface? = null
-    set(value) {
-        faceDetector.receiver = value
-        field = value
-    }
+        set(value) {
+            faceDetector.receiver = value
+            field = value
+        }
 
     init {
         camera.imageReceiver = this

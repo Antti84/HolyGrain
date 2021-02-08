@@ -17,6 +17,6 @@ interface DistanceDataReceiverInterface : DistanceReceiverInterface {
     fun receiveFaceData(faces: MutableList<Face>, time: Long)
 }
 
-interface DistanceImageAndDataReceiverInterface : DistanceDataReceiverInterface, DistanceImageReceiverInterface {
+interface DistanceImageAndDataReceiverInterface : DistanceReceiverInterface {
     fun receiveFaceImageAndData(image: ImageProxy, faces: MutableList<Face>, time: Long)
 }

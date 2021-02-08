@@ -30,7 +30,7 @@ class HolyFaceDetector() {
     @SuppressLint("UnsafeExperimentalUsageError")
     fun analyze(imageProxy: ImageProxy, timeStamp: Long) {
         val ip = imageProxy
-        if(receiver != null && receiver is DistanceDataReceiverInterface) {
+        if(receiver != null && (receiver is DistanceDataReceiverInterface || receiver is DistanceImageAndDataReceiverInterface)) {
 
             val mediaImage = imageProxy.image
             if (mediaImage != null) {

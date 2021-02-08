@@ -21,9 +21,9 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
     lateinit var cameraView: ImageView
     lateinit var testTextView: TextView
 
-    var freezeFaceImage = false
-
     var trackingFaceId = -1
+
+    var freezeImage = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,20 +77,20 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun receiveFaceImage(image: ImageProxy, time: Long) {
+    /*@SuppressLint("SetTextI18n")
+    override */fun receiveFaceImage(image: ImageProxy, time: Long) {
         if (time > 0) {
             val now = System.currentTimeMillis()
             testTextView.text = "$now - $time = ${now - time}"
         }
-        if(!freezeFaceImage)
+        if(!freezeImage)
             setImageToLayout(image)
     }
 
     var drawDotsToImage = false
     override fun receiveFaceImageAndData(image: ImageProxy, faces: MutableList<Face>, time: Long) {
 
-        if(!freezeFaceImage && drawDotsToImage) {
+        if(drawDotsToImage) {
             var bmp = imageProxyToBitmap(image)
             if (bmp != null) {
                 for (face in faces) {
@@ -98,7 +98,8 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
                 }
                 bmp = bmp!!.flip(-1f, 1f, bmp.width / 2f, bmp.height / 2f)
                 runOnUiThread {
-                    cameraView.setImageBitmap(bmp)
+                    if(!freezeImage)
+                        cameraView.setImageBitmap(bmp)
                 }
             }
         } else {
@@ -109,8 +110,8 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
         receiveFaceData(faces, time)
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun receiveFaceData(faces: MutableList<Face>, time: Long) {
+    /*@SuppressLint("SetTextI18n")
+    override */open fun receiveFaceData(faces: MutableList<Face>, time: Long) {
         val now = System.currentTimeMillis()
         val s = "$now - $time = ${now - time}"
         testTextView.text = s + "\n" + "Num faces: ${faces.size}"

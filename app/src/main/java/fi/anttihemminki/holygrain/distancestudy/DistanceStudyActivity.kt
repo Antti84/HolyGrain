@@ -22,6 +22,8 @@ class DistanceStudyActivity : CameraActivity() {
 
     lateinit var binding: DistanceActivityBinding
 
+    var faceName = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -82,6 +84,7 @@ class DistanceStudyActivity : CameraActivity() {
             "in_use" -> binding.testCreationHintText.text = getString(R.string.testset_name_in_use)
             "creation error" -> binding.testCreationHintText.text = getString(R.string.testset_name_creation_error)
             "ok" ->  {
+                faceName = binding.testPersonNameEditText.text.toString()
                 binding.startBtn.text = getString(R.string.ready)
                 binding.testCreationHintText.text = getString(R.string.aseta_naama_txt)
                 binding.testPersonNameEditText.visibility = View.INVISIBLE
@@ -97,6 +100,8 @@ class DistanceStudyActivity : CameraActivity() {
             createTestset(t, { testsetCreationSuccesHandler(it) }, {})
         } else if(testSetState == TestSetState.ASETTELE_KASVO) {
             testSetState = TestSetState.VALITE_KASVO
+        } else if(testSetState > TestSetState.VALITE_KASVO) {
+            collectingData = true
         }
     }
 
@@ -105,11 +110,14 @@ class DistanceStudyActivity : CameraActivity() {
     var trackingIdTarjolla = -1
     override fun receiveFaceData(faces: MutableList<Face>, time: Long) {
         super.receiveFaceData(faces, time)
+        if(testSetState == TestSetState.ASETTELE_KASVO || testSetState == TestSetState.EI_ALOITETTU)
+            return
+
         if(testSetState == TestSetState.VALITE_KASVO) {
             if(trackingIdTarjolla == -1) {
                 //super.receiveFaceData(faces, time)
                 if(faces.size == 1) {
-                    freezeFaceImage = true
+                    freezeImage = true
                     trackingIdTarjolla = faces[0].trackingId!!
                     binding.testCreationHintText.text = "Onko näkyvä & valittu naama (id $trackingIdTarjolla) oikea?"
 
@@ -138,7 +146,7 @@ class DistanceStudyActivity : CameraActivity() {
                 if(numCollected < testSetState.numMeasures) {
                     this.testData.add(
                             FaceData(
-                                    "TESTI",
+                                    faceName,
                                     testSetState.toString(),
                                     time,
                                     face.boundingBox,
@@ -160,21 +168,43 @@ class DistanceStudyActivity : CameraActivity() {
         }
     }
 
+    fun toNextState() {
+        val nextState = testSetState.getNext()
+        if(nextState != null) {
+            testSetState = nextState
+            binding.testCreationHintText.text = testSetState.hint
+        } else {
+            // VALMIS
+        }
+    }
+
     fun yesBtnPressed(view: View) {
         if(testSetState == TestSetState.VALITE_KASVO) {
             trackingFaceId = trackingIdTarjolla
+            freezeImage = false
 
-            distanceMeter.startCamera()
+            binding.noBtn.visibility = View.INVISIBLE
+            binding.yesBtn.visibility = View.INVISIBLE
+
+            binding.noBtn.isEnabled = false
+            binding.yesBtn.isEnabled = false
+
+            binding.startBtn.visibility = View.VISIBLE
+            binding.startBtn.isEnabled = true
+            binding.startBtn.text = "Paina kun valmista"
+
+            toNextState()
         }
     }
 
     fun noBtnPressed(view: View) {
         if(testSetState == TestSetState.VALITE_KASVO) {
             trackingIdTarjolla = -1
-            freezeFaceImage = false
-
-            distanceMeter.startCamera()
-
+            freezeImage = false
         }
+    }
+
+    fun testButtonPressed(view: View) {
+        freezeImage = !freezeImage
     }
 }
