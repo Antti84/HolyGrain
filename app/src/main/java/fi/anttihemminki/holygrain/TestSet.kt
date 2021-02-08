@@ -2,7 +2,7 @@ package fi.anttihemminki.holygrain
 
 enum class TestSetState(val numMeasures: Int, val hint: String) {
     EI_ALOITETTU(0, ""),
-
+    ASETTELE_KASVO(1, "Asettele vain oma naama näkyviin"),
     VALITE_KASVO(1, "Vain oma naama näkyviin."),
 
     // ETÄISYYDET

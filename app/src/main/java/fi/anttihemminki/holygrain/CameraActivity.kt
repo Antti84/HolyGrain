@@ -14,16 +14,16 @@ import com.google.mlkit.vision.face.*
 import fi.anttihemminki.holygrain.databinding.CameraActivityBinding
 import fi.anttihemminki.holygrain.facedistance.*
 
-open class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInterface {
+abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInterface {
 
-    lateinit var binding: CameraActivityBinding
-
-    private lateinit var distanceMeter: DistanceMeter
+    lateinit var distanceMeter: DistanceMeter
 
     lateinit var cameraView: ImageView
     lateinit var testTextView: TextView
 
     var freezeFaceImage = false
+
+    var trackingFaceId = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +32,6 @@ open class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInterfac
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
-
-        binding = CameraActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        cameraView = binding.cameraImageView
-        testTextView = binding.testTextView
 
         distanceMeter = DistanceMeter(this)
         distanceMeter.imageDataReceiver = this

@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">HolyGrain</string>
     <string name="name">Nimi</string>
+    <string name="testset_name_in_use">Nimi on jo käytössä, valitse toinen nimi</string>
+    <string name="testset_name_creation_error">Nimenluontierror</string>
+    <string name="start_test">Aloita testi</string>
+    <string name="ready">Valmis</string>
+    <string name="aseta_naama_txt">Aseta oma naamasi keskelle kuvaa. Vain oma naama näkyviin.</string>
+    <string name="no">Ei</string>
+    <string name="yes">Kyllä</string>
 </resources>

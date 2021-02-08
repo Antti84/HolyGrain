@@ -27,8 +27,8 @@ class DistanceMeter(activity: AppCompatActivity) : HolyCameraReveiceImageInterfa
     }
 
     override fun receiveImage(image: ImageProxy, time: Long) {
-        if(imageDataReceiver != null) {
-            when(imageDataReceiver) {
+        if (imageDataReceiver != null) {
+            when (imageDataReceiver) {
                 is DistanceImageAndDataReceiverInterface -> faceDetector.analyze(image, time)
                 is DistanceDataReceiverInterface -> faceDetector.analyze(image, time)
                 is DistanceImageReceiverInterface ->

@@ -6,7 +6,8 @@ import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.HOLY_TAG
 
-interface DistanceReceiverInterface {}
+interface DistanceReceiverInterface {
+}
 
 interface DistanceImageReceiverInterface : DistanceReceiverInterface {
     fun receiveFaceImage(image: ImageProxy /*, faces: MutableList<Face> */, time: Long)
