@@ -102,12 +102,17 @@ class DistanceStudyActivity : CameraActivity() {
             testSetState = TestSetState.VALITE_KASVO
         } else if(testSetState > TestSetState.VALITE_KASVO) {
             collectingData = true
+            pendingToStartPhase = false
+            binding.startBtn.isEnabled = false
+            binding.startBtn.visibility = View.INVISIBLE
         }
     }
 
     var collectingData = false
     var numCollected = 0
     var trackingIdTarjolla = -1
+    var pendingToStartPhase = false
+
     override fun receiveFaceData(faces: MutableList<Face>, time: Long) {
         super.receiveFaceData(faces, time)
         if(testSetState == TestSetState.ASETTELE_KASVO || testSetState == TestSetState.EI_ALOITETTU)
@@ -139,30 +144,54 @@ class DistanceStudyActivity : CameraActivity() {
         if(faces.size == 0) {
             return
         }
-        val face = faces[0]
+        var face: Face? = null
 
-        if(collectingData) {
+        for(f in faces) {
+            if(f.trackingId == trackingFaceId) {
+                face = f
+                break
+            }
+        }
+
+        if(face == null) {
+            return
+        }
+
+        if(!pendingToStartPhase && collectingData) {
             if (testSetState != TestSetState.EI_ALOITETTU) {
                 if(numCollected < testSetState.numMeasures) {
-                    this.testData.add(
-                            FaceData(
-                                    faceName,
-                                    testSetState.toString(),
-                                    time,
-                                    face.boundingBox,
-                                    face.trackingId!!,
-                                    face.headEulerAngleX,
-                                    face.headEulerAngleY,
-                                    face.headEulerAngleZ,
-                                    face.smilingProbability!!,
-                                    face.rightEyeOpenProbability!!,
-                                    face.leftEyeOpenProbability!!,
-                                    getFacePoints(face)
-                            )
+                    val fd = FaceData(
+                            faceName,
+                            testSetState.toString(),
+                            time,
+                            face.boundingBox,
+                            face.trackingId!!,
+                            face.headEulerAngleX,
+                            face.headEulerAngleY,
+                            face.headEulerAngleZ,
+                            face.smilingProbability!!,
+                            face.rightEyeOpenProbability!!,
+                            face.leftEyeOpenProbability!!,
+                            getFacePoints(face)
                     )
+                    this.testData.add(fd)
+                    saveTestset(faceName, testSetState.toString(), numCollected, fd,
+                            {
+                                Log.i(HOLY_TAG, it.toString())
+                            },
+                            {
+                                Log.e(HOLY_TAG, "error")
+                            })
                     numCollected++
+
+                    binding.testTextView.text = "Kerätty: ${numCollected}/${testSetState.numMeasures}"
                 } else {
+                    pendingToStartPhase = true
+                    binding.startBtn.text = "Paina kun valmista"
+                    binding.startBtn.isEnabled = true
+                    binding.startBtn.visibility = View.VISIBLE
                     Log.i("DistanceStudyActivity", "TÄYNNÄ")
+                    toNextState()
                 }
             }
         }
@@ -173,6 +202,8 @@ class DistanceStudyActivity : CameraActivity() {
         if(nextState != null) {
             testSetState = nextState
             binding.testCreationHintText.text = testSetState.hint
+            numCollected = 0
+            pendingToStartPhase = true
         } else {
             // VALMIS
         }
