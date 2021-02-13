@@ -8,4 +8,7 @@
     <string name="aseta_naama_txt">Aseta oma naamasi keskelle kuvaa. Vain oma naama näkyviin.</string>
     <string name="no">Ei</string>
     <string name="yes">Kyllä</string>
+    <string name="choose_face">Valitse näkyvä kasvo</string>
+    <string name="shows_image_from_camera">Shows image from camera</string>
+    <string name="sarta_calibration">Aloita kalibrointi</string>
 </resources>

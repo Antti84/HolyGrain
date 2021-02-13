@@ -11,7 +11,6 @@ import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.face.*
-import fi.anttihemminki.holygrain.databinding.CameraActivityBinding
 import fi.anttihemminki.holygrain.facedistance.*
 
 abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInterface {
@@ -19,7 +18,7 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
     lateinit var distanceMeter: DistanceMeter
 
     lateinit var cameraView: ImageView
-    lateinit var testTextView: TextView
+    var testTextView: TextView? = null
 
     var trackingFaceId = -1
 
@@ -81,7 +80,8 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
     override */fun receiveFaceImage(image: ImageProxy, time: Long) {
         if (time > 0) {
             val now = System.currentTimeMillis()
-            testTextView.text = "$now - $time = ${now - time}"
+            if(testTextView != null)
+                testTextView!!.text = "$now - $time = ${now - time}"
         }
         if(!freezeImage)
             setImageToLayout(image)
@@ -114,6 +114,7 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
     override */open fun receiveFaceData(faces: MutableList<Face>, time: Long) {
         val now = System.currentTimeMillis()
         val s = "$now - $time = ${now - time}"
-        testTextView.text = s + "\n" + "Num faces: ${faces.size}"
+        if(testTextView != null)
+            testTextView!!.text = s + "\n" + "Num faces: ${faces.size}"
     }
 }
