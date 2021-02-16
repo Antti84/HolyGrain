@@ -11,7 +11,7 @@ import fi.anttihemminki.holygrain.facedistance.DistanceAndImageReceiverInterface
 class DistanceMeterActivity : CameraActivity() {
 
     lateinit var binding: ActivityDistanceMeterBinding
-    var faceId = -1
+    //var faceId = -1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,12 +25,12 @@ class DistanceMeterActivity : CameraActivity() {
         binding.faceNumTxt.text = "testi"
     }
 
-    fun enableShowView(view: View, enable: Boolean = true) {
+    /*fun enableShowView(view: View, enable: Boolean = true) {
         view.isEnabled = enable
         view.visibility = if (enable) View.VISIBLE else View.INVISIBLE
-    }
+    }*/
 
-    var faceIdTarjolla = -1
+    /*var faceIdTarjolla = -1
     override fun receiveFaceData(faces: MutableList<Face>, time: Long) {
         super.receiveFaceData(faces, time)
 
@@ -102,5 +102,6 @@ class DistanceMeterActivity : CameraActivity() {
     }
 
     enum class State { TRACKING_ID, CALIBRATION_NOT_STARTED, CALIBRATING, SHOW_CURRENT_DISTANCE }
-    var state = State.TRACKING_ID
+    var state = State.TRACKING_ID*/
+
 }

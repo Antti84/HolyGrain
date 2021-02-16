@@ -37,10 +37,10 @@ fun imageProxyToBitmap(imageProxy: ImageProxy): Bitmap? {
     if(mediaImage != null) {
         val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
         val bmp = mediaImage.toBitmap().rotate(image.rotationDegrees.toFloat())
-        imageProxy.close()
+        //imageProxy.close()
         return bmp
     }
-    imageProxy.close()
+    //imageProxy.close()
     return null
 }
 

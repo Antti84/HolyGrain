@@ -4,18 +4,16 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.mlkit.vision.face.*
 import fi.anttihemminki.holygrain.facedistance.*
 
-abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInterface {
-
-    lateinit var distanceMeter: DistanceMeter
+abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface {
 
     lateinit var cameraView: ImageView
     var testTextView: TextView? = null
@@ -23,6 +21,10 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
     var trackingFaceId = -1
 
     var freezeImage = false
+
+    lateinit var camera: HolyCamera
+
+    lateinit var faceDetector : HolyFaceDetector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +34,45 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
-        distanceMeter = DistanceMeter(this)
-        distanceMeter.imageDataReceiver = this
-        distanceMeter.startCamera()
+        camera = HolyCamera(this)
+        startCamera()
+
+        faceDetector = HolyFaceDetector()
+    }
+
+    fun startCamera() {
+        camera.startCamera()
     }
 
     override fun onDestroy() {
+        camera.shutdown()
         super.onDestroy()
-        distanceMeter.shutdown()
+    }
+
+    override fun receiveImage(imageProxy: ImageProxy, timeStamp: Long) {
+        Log.i(HOLY_TAG, "ReceiveImage: $imageProxy, time: $timeStamp")
+
+        faceDetector.analyze(imageProxy) { faces ->
+            var bmp = imageProxyToBitmap(imageProxy)
+            imageProxy.close()
+            for(face in faces) {
+                bmp = drawFacePointsToBitmap(bmp!!, face)
+            }
+
+            if(bmp != null) {
+                bmp = bmp.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
+                this.runOnUiThread {
+                    cameraView.setImageBitmap(bmp)
+                }
+            }
+
+            Log.i(HOLY_TAG, "Num faces: ${faces.size}, time: $timeStamp")
+        }
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
-            baseContext, it) == PackageManager.PERMISSION_GRANTED
+                baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onRequestPermissionsResult(
@@ -65,20 +93,8 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
-    @SuppressLint("UnsafeExperimentalUsageError")
-    fun setImageToLayout(imageProxy: ImageProxy) {
-        var bmp = imageProxyToBitmap(imageProxy)
-        //imageProxy.close()
-        if(bmp != null) {
-            bmp = bmp.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
-            this.runOnUiThread {
-                cameraView.setImageBitmap(bmp)
-            }
-        }
-    }
-
     /*@SuppressLint("SetTextI18n")
-    override */fun receiveFaceImage(image: ImageProxy, time: Long) {
+    override fun receiveFaceImage(image: ImageProxy, time: Long) {
         if (time > 0) {
             val now = System.currentTimeMillis()
             if(testTextView != null)
@@ -117,5 +133,5 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
         val s = "$now - $time = ${now - time}"
         if(testTextView != null)
             testTextView!!.text = s + "\n" + "Num faces: ${faces.size}"
-    }
+    }*/
 }

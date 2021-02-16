@@ -11,14 +11,12 @@ import androidx.core.content.ContextCompat
 import fi.anttihemminki.holygrain.CameraActivity
 import java.util.concurrent.Executors
 
-interface HolyCameraReveiceImageInterface {
+interface HolyCameraReceiveImageInterface {
     fun receiveImage(imageProxy: ImageProxy, timeStamp: Long)
 }
 
-class HolyCamera(val activity: AppCompatActivity) {
+class HolyCamera(val activity: CameraActivity) {
     private val cameraExecutor = Executors.newSingleThreadExecutor()
-
-    var imageReceiver: HolyCameraReveiceImageInterface? = null
 
     @SuppressLint("UnsafeExperimentalUsageError")
     fun startCamera() {
@@ -32,12 +30,8 @@ class HolyCamera(val activity: AppCompatActivity) {
                     .also {
                         it.setAnalyzer(cameraExecutor, ImageAnalysis.Analyzer
                         { image ->
-                            if(this.imageReceiver != null) {
-                                val time = System.currentTimeMillis()
-                                imageReceiver!!.receiveImage(image, time)
-                            } else {
-                                image.close()
-                            }
+                            val time = System.currentTimeMillis()
+                            activity.receiveImage(image, time)
                         })
                     }
 

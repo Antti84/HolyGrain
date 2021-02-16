@@ -54,7 +54,7 @@ class DistanceStudyActivity : CameraActivity() {
             override fun afterTextChanged(s: Editable?) { }
         })
 
-        drawDotsToImage = true
+        //drawDotsToImage = true
     }
 
     fun activateControls(activate: Boolean) {
@@ -113,8 +113,8 @@ class DistanceStudyActivity : CameraActivity() {
     var trackingIdTarjolla = -1
     var pendingToStartPhase = false
 
-    override fun receiveFaceData(faces: MutableList<Face>, time: Long) {
-        super.receiveFaceData(faces, time)
+    fun receiveFaceData(faces: MutableList<Face>, time: Long) {
+        //super.receiveFaceData(faces, time)
         if(testSetState == TestSetState.ASETTELE_KASVO || testSetState == TestSetState.EI_ALOITETTU)
             return
 
