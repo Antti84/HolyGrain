@@ -1,9 +1,12 @@
 package fi.anttihemminki.holygrain
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.databinding.ActivityDistanceMeterBinding
+import fi.anttihemminki.holygrain.facedistance.DistanceAndImageReceiverInterface
 
 class DistanceMeterActivity : CameraActivity() {
 
@@ -45,6 +48,12 @@ class DistanceMeterActivity : CameraActivity() {
             }
         } else if(state == State.CALIBRATING) {
 
+        } else if(state == State.SHOW_CURRENT_DISTANCE) {
+            var min = 1000000.0
+            var max = -1.0
+            var mean = 0.0
+
+
         }
     }
 
@@ -65,15 +74,33 @@ class DistanceMeterActivity : CameraActivity() {
 
             distanceMeter.startCalibration(faceId, {
                 binding.calibrationTxt.text = "Kalibroitu: ${distanceMeter.calibrationFaces.size}/${distanceMeter.numFacesToCalibration}"
+                state = State.SHOW_CURRENT_DISTANCE
             },
                 {
                 binding.calibrationTxt.text = "Kalibrointifactor: ${distanceMeter.calibrationFactors.toString()}"
+            }, object: DistanceAndImageReceiverInterface {
+                override fun receiveDistanceAndImage(image: ImageProxy, distances: ArrayList<Double>, time: Long) {
+                    sendDistanceData("TestName", "TestSet", 0, distances, time,
+                            {
+                                Log.i(HOLY_TAG, "ok")
+                            },
+                            {
+                                Log.i(HOLY_TAG, "not ok")
+                            })
+                    try {
+                        setImageToLayout(image)
+                    } catch (error: Exception) {}
+                    runOnUiThread {
+                        binding.calibrationTxt.text = distances.toString()
+                    }
+                }
+
             })
 
             state = State.CALIBRATING
         }
     }
 
-    enum class State { TRACKING_ID, CALIBRATION_NOT_STARTED, CALIBRATING }
+    enum class State { TRACKING_ID, CALIBRATION_NOT_STARTED, CALIBRATING, SHOW_CURRENT_DISTANCE }
     var state = State.TRACKING_ID
 }

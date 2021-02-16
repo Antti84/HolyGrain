@@ -39,7 +39,8 @@ class HolyFaceDetector() {
                 detector.process(image)
                         .addOnSuccessListener { faces ->
 
-                            if(receiver != null) {
+
+                            if(faces != null && faces.size > 0 && receiver != null) {
                                 if(receiver is DistanceImageAndDataReceiverInterface) {
                                     (receiver as DistanceImageAndDataReceiverInterface).receiveFaceImageAndData(ip, faces, timeStamp)
                                 } else if(receiver is DistanceDataReceiverInterface) {

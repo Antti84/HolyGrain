@@ -68,6 +68,7 @@ abstract class CameraActivity : HolyActivity(), DistanceImageAndDataReceiverInte
     @SuppressLint("UnsafeExperimentalUsageError")
     fun setImageToLayout(imageProxy: ImageProxy) {
         var bmp = imageProxyToBitmap(imageProxy)
+        //imageProxy.close()
         if(bmp != null) {
             bmp = bmp.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
             this.runOnUiThread {
