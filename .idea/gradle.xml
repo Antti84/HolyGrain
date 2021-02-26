@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/godot-lib.3.2.3.stable.release" />
+            <option value="$PROJECT_DIR$/holycamera" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

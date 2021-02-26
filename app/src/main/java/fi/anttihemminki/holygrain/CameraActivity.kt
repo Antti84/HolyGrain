@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.facedistance.*
 
 abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface {
@@ -18,13 +19,9 @@ abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface 
     lateinit var cameraView: ImageView
     var testTextView: TextView? = null
 
-    var trackingFaceId = -1
-
     var freezeImage = false
 
     lateinit var camera: HolyCamera
-
-    lateinit var faceDetector : HolyFaceDetector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +33,6 @@ abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface 
 
         camera = HolyCamera(this)
         startCamera()
-
-        faceDetector = HolyFaceDetector()
     }
 
     fun startCamera() {
@@ -47,27 +42,6 @@ abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface 
     override fun onDestroy() {
         camera.shutdown()
         super.onDestroy()
-    }
-
-    override fun receiveImage(imageProxy: ImageProxy, timeStamp: Long) {
-        Log.i(HOLY_TAG, "ReceiveImage: $imageProxy, time: $timeStamp")
-
-        faceDetector.analyze(imageProxy) { faces ->
-            var bmp = imageProxyToBitmap(imageProxy)
-            imageProxy.close()
-            for(face in faces) {
-                bmp = drawFacePointsToBitmap(bmp!!, face)
-            }
-
-            if(bmp != null) {
-                bmp = bmp.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
-                this.runOnUiThread {
-                    cameraView.setImageBitmap(bmp)
-                }
-            }
-
-            Log.i(HOLY_TAG, "Num faces: ${faces.size}, time: $timeStamp")
-        }
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {

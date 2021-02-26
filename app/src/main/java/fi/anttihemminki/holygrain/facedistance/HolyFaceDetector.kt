@@ -18,7 +18,7 @@ class HolyFaceDetector() {
 
         val highAccuracyOpts = FaceDetectorOptions.Builder()
                 .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
-                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
                 .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
                 .enableTracking()
                 .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
@@ -36,12 +36,7 @@ class HolyFaceDetector() {
 
             detector.process(image)
                     .addOnSuccessListener { faces ->
-                        if(faces != null && faces.size > 0) {
-                            faceDataReceiver(faces)
-                        } else {
-                            imageProxy.close()
-                            Log.i(HOLY_TAG, "No faces in image")
-                        }
+                        faceDataReceiver(faces)
                     }
                     .addOnFailureListener { e ->
                         Log.i(TAG, "Error: ${e.localizedMessage}")

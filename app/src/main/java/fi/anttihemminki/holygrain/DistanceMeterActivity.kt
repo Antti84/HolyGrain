@@ -1,18 +1,33 @@
 package fi.anttihemminki.holygrain
 
+import android.graphics.Bitmap
+import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.camera.core.ImageProxy
+import com.google.android.gms.vision.face.Contour
 import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.databinding.ActivityDistanceMeterBinding
-import fi.anttihemminki.holygrain.facedistance.DistanceAndImageReceiverInterface
+import fi.anttihemminki.holygrain.facedistance.*
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sqrt
+
+enum class DistanceMeterActivityState { HEAD_POSTURE, CALIBRATING, CALIBRATED }
 
 class DistanceMeterActivity : CameraActivity() {
 
     lateinit var binding: ActivityDistanceMeterBinding
-    //var faceId = -1
 
+    lateinit var faceDetector : HolyFaceDetector
+
+    var drawFacePoints = true
+
+    var distanceMeter = DistanceMeter()
+
+    var state = DistanceMeterActivityState.HEAD_POSTURE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +37,126 @@ class DistanceMeterActivity : CameraActivity() {
 
         cameraView = binding.faceImageView
 
-        binding.faceNumTxt.text = "testi"
+        //drawFacePoints = false
+
+        faceDetector = HolyFaceDetector()
+
+        distanceMeter.startCalibration()
+
+        refreshUI()
+
+        state = DistanceMeterActivityState.CALIBRATING
     }
+
+    fun refreshUI() {
+        if(state == DistanceMeterActivityState.HEAD_POSTURE) {
+            binding.guideTxt.text = "Asettele pää suoraan"
+
+        }
+    }
+
+    data class RawFaceData(val imageProxy: ImageProxy, val faces: MutableList<Face>,
+                           val timeStamp: Long)
+
+    override fun receiveImage(imageProxy: ImageProxy, timeStamp: Long) {
+        Log.i(HOLY_TAG, "ReceiveImage: $imageProxy, time: $timeStamp")
+
+        faceDetector.analyze(imageProxy) { faces ->
+            val data = RawFaceData(imageProxy, faces, timeStamp)
+            receiveFaces(data)
+        }
+    }
+
+    fun setBmpToView(bmp: Bitmap?) {
+        if(bmp != null) {
+            val bmp2 = bmp.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
+            this.runOnUiThread {
+                cameraView.setImageBitmap(bmp2)
+            }
+        }
+    }
+
+    //var calibrationRotationX = 400.0f
+    val headRotationVariabilityFactor = 5.0f
+    fun receiveFaces(rawFaceData: RawFaceData) {
+        var bmp = imageProxyToBitmap(rawFaceData.imageProxy)
+        rawFaceData.imageProxy.close()
+
+        if(rawFaceData.faces.size != 1) {
+            setBmpToView(bmp)
+            return
+        }
+
+        val face = rawFaceData.faces[0]
+
+        val rotX = face.headEulerAngleX
+        val rotY = face.headEulerAngleY
+
+        var t = "Asteet: $rotX, $rotY"
+        if(state == DistanceMeterActivityState.HEAD_POSTURE) {
+            when {
+                rotY > headRotationVariabilityFactor -> {
+                    t += "\nKäännä päätä hieman OIKEALLE"
+                    binding.hintTxt.text = t
+                }
+                rotY < -headRotationVariabilityFactor -> {
+                    t += "\nKäännä päätä hieman VASEMMALLE"
+                    binding.hintTxt.text = t
+                }
+                else -> {
+                    binding.hintTxt.text = "Pää on hyvässä asennossa"
+                    binding.calibrateBtn.isEnabled = true
+                }
+            }
+        } else if(state == DistanceMeterActivityState.CALIBRATING) {
+            if (abs(rotX) > headRotationVariabilityFactor ||
+                    abs(rotY) > headRotationVariabilityFactor) {
+                if (rotX > headRotationVariabilityFactor) {
+                    t += "\nKallista päätä hieman ALASpäin"
+                } else if (rotX < -headRotationVariabilityFactor) {
+                    t += "\nKallista päätä hieman YLÖSpäin"
+                }
+
+                if (rotY > headRotationVariabilityFactor) {
+                    t += "\nKäännä päätä hieman OIKEALLE"
+                } else if (rotY < -headRotationVariabilityFactor) {
+                    t += "\nKäännä päätä hieman VASEMMALLE"
+                }
+
+                binding.hintTxt.text = t
+
+                binding.calibrateBtn.isEnabled = false
+                return
+            } else {
+                binding.hintTxt.text = "Pää on hyvässä asennossa"
+                binding.calibrateBtn.isEnabled = true
+            }
+        }
+
+        //val facePoints = getFacePoints(face)
+
+        if(drawFacePoints) {
+            val facePoints = getFacePoints(face)
+            bmp = drawFaceLinesToBitmap(bmp!!, facePoints, faceConnections)
+        }
+
+        setBmpToView(bmp)
+
+        val distance = distanceMeter.measurer.measure(face)
+    }
+
+    fun getDistances(points: ArrayList<PointF>, lines: Array<Array<Int>>): ArrayList<Double> {
+        val d = ArrayList<Double>()
+        for(line in lines) {
+            val p1 = points[line[0]]
+            val p2 = points[line[1]]
+            d.add(sqrt((p1.x-p2.x).toDouble().pow(2) + (p1.y-p2.y).toDouble().pow(2)))
+        }
+        return d
+    }
+
+    fun startCalibration(view: View) {}
+    fun btnClick(view: View) {}
 
     /*fun enableShowView(view: View, enable: Boolean = true) {
         view.isEnabled = enable

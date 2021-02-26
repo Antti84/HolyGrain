@@ -1,9 +1,6 @@
 package fi.anttihemminki.holygrain.facedistance
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.FaceData
 import fi.anttihemminki.holygrain.FacePoint
@@ -12,12 +9,12 @@ import fi.anttihemminki.holygrain.holycamera.contours
 import fi.anttihemminki.holygrain.holycamera.landmarks
 import java.lang.IllegalArgumentException
 
-fun drawFacePointsToBitmap(image: Bitmap, face: Face): Bitmap {
-    try {
+fun drawFacePointsToBitmap(image: Bitmap, facePoints: ArrayList<PointF>): Bitmap {
+    /*try {
         requireNotNull(face.trackingId)
     } catch (error: IllegalArgumentException) {
         return image
-    }
+    }*/
 
     val bitmapConfig = image.config
 
@@ -25,57 +22,51 @@ fun drawFacePointsToBitmap(image: Bitmap, face: Face): Bitmap {
     val canvas = Canvas(bitmap)
     val paint = Paint()
 
-    paint.color = Color.RED
-    paint.strokeWidth = 2F
+    paint.color = Color.GREEN
+    paint.strokeWidth = 5F
     paint.style = Paint.Style.STROKE
 
-    val facePoints = getFacePoints(face)
+    //val facePoints = getFacePoints(face)
 
-    canvas.drawRect(face.boundingBox, paint)
+    //canvas.drawRect(face.boundingBox, paint)
 
     for(p in facePoints) {
-        canvas.drawPoint(p.coords.x, p.coords.y, paint)
+        canvas.drawPoint(p.x, p.y, paint)
     }
-
-    /*for(landmark in landmarks) {
-        val lm = face.getLandmark(landmark)
-        lm?.let {
-            canvas.drawPoint(lm.position.x, lm.position.y, paint)
-            val fp = FacePoint(lm.position, landmark, FacePointType.LANDMARK, -1)
-            facePoints.add(fp)
-        }
-    }
-
-    for(contour in contours) {
-        val contData = face.getContour(contour)?.points
-        if (contData != null) {
-            for((index, point) in contData.withIndex()) {
-                canvas.drawPoint(point.x, point.y, paint)
-                val fp = FacePoint(point, contour, FacePointType.CONTOUR, index)
-                facePoints.add(fp)
-
-            }
-        }
-    }
-
-    val faceData = FaceData(
-            "Antti",
-            "TESTI",//testSet.name,
-            0,//time,
-            face.boundingBox,
-            face.trackingId!!,
-            face.headEulerAngleX,
-            face.headEulerAngleY,
-            face.headEulerAngleZ,
-            face.smilingProbability!!,
-            face.rightEyeOpenProbability!!,
-            face.leftEyeOpenProbability!!,
-            facePoints
-    )*/
 
     return bitmap
 }
 
+fun drawFaceLinesToBitmap(image: Bitmap, facePoints: ArrayList<PointF>,
+                          lines: Array<Array<Int>>):  Bitmap {
+    val bitmapConfig = image.config
+
+    val bitmap = image.copy(bitmapConfig, true)
+    val canvas = Canvas(bitmap)
+    val paint = Paint()
+
+    paint.color = Color.GREEN
+    paint.strokeWidth = 2F
+    paint.style = Paint.Style.STROKE
+
+    for(line in lines) {
+        if(line.size == 2) {
+            if(facePoints.size > line[0] && facePoints.size > line[1]) {
+                canvas.drawLine(
+                    facePoints[line[0]].x,
+                    facePoints[line[0]].y,
+                    facePoints[line[1]].x,
+                    facePoints[line[1]].y,
+                    paint
+                )
+            }
+        }
+        //canvas.drawPoint(p.x, p.y, paint)
+    }
+
+    return bitmap
+}
+/*
 fun getFacePoints(face: Face): ArrayList<FacePoint> {
     val facePoints = ArrayList<FacePoint>()
 
@@ -99,4 +90,4 @@ fun getFacePoints(face: Face): ArrayList<FacePoint> {
     }
 
     return facePoints
-}
+}*/

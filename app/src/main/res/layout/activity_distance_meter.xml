@@ -17,46 +17,24 @@
         android:contentDescription="@string/shows_image_from_camera" />
 
     <TextView
-        android:id="@+id/faceNumTxt"
+        android:id="@+id/guideTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:text=""
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/faceImageView"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/chosenFaceId"
+        android:id="@+id/hintTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:text=""
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/faceNumTxt"/>
-
-    <TextView
-        android:id="@+id/calibrationTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text=""
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/chosenFaceId"/>
-
-    <Button
-        android:id="@+id/selectFaceBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/choose_face"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        android:onClick="selectFace"
-        app:layout_constraintTop_toBottomOf="@id/faceImageView" />
+        app:layout_constraintTop_toBottomOf="@id/guideTxt" />
 
     <Button
         android:id="@+id/calibrateBtn"
@@ -67,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
         android:visibility="invisible"
-        android:onClick="startCalibration"
+        android:onClick="btnClick"
         app:layout_constraintTop_toBottomOf="@id/faceImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

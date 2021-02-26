@@ -14,7 +14,7 @@ import java.lang.Exception
 
 const val MINIMUM_TEST_BLOCK_NAME_LENGTH = 5
 
-class DistanceStudyActivity : CameraActivity() {
+abstract class DistanceStudyActivity : CameraActivity() {
 
     var testSetState = TestSetState.EI_ALOITETTU
 
@@ -147,10 +147,10 @@ class DistanceStudyActivity : CameraActivity() {
         var face: Face? = null
 
         for(f in faces) {
-            if(f.trackingId == trackingFaceId) {
+            /*if(f.trackingId == trackingFaceId) {
                 face = f
                 break
-            }
+            }*/
         }
 
         if(face == null) {
@@ -160,7 +160,7 @@ class DistanceStudyActivity : CameraActivity() {
         if(!pendingToStartPhase && collectingData) {
             if (testSetState != TestSetState.EI_ALOITETTU) {
                 if(numCollected < testSetState.numMeasures) {
-                    val fd = FaceData(
+                    /*val fd = FaceData(
                             faceName,
                             testSetState.toString(),
                             time,
@@ -182,7 +182,7 @@ class DistanceStudyActivity : CameraActivity() {
                             {
                                 Log.e(HOLY_TAG, "error")
                             })
-                    numCollected++
+                    numCollected++*/
 
                     binding.testTextView.text = "Kerätty: ${numCollected}/${testSetState.numMeasures}"
                 } else {
@@ -211,7 +211,7 @@ class DistanceStudyActivity : CameraActivity() {
 
     fun yesBtnPressed(view: View) {
         if(testSetState == TestSetState.VALITE_KASVO) {
-            trackingFaceId = trackingIdTarjolla
+            //trackingFaceId = trackingIdTarjolla
             freezeImage = false
 
             binding.noBtn.visibility = View.INVISIBLE
