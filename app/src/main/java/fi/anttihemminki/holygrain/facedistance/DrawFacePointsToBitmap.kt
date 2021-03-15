@@ -1,13 +1,6 @@
 package fi.anttihemminki.holygrain.facedistance
 
 import android.graphics.*
-import com.google.mlkit.vision.face.Face
-import fi.anttihemminki.holygrain.FaceData
-import fi.anttihemminki.holygrain.FacePoint
-import fi.anttihemminki.holygrain.FacePointType
-import fi.anttihemminki.holygrain.holycamera.contours
-import fi.anttihemminki.holygrain.holycamera.landmarks
-import java.lang.IllegalArgumentException
 
 fun drawFacePointsToBitmap(image: Bitmap, facePoints: ArrayList<PointF>): Bitmap {
     /*try {
@@ -37,7 +30,7 @@ fun drawFacePointsToBitmap(image: Bitmap, facePoints: ArrayList<PointF>): Bitmap
     return bitmap
 }
 
-fun drawFaceLinesToBitmap(image: Bitmap, facePoints: ArrayList<PointF>,
+fun drawFaceLinesToBitmap(image: Bitmap, facePoints: Array<PointF>,
                           lines: Array<Array<Int>>):  Bitmap {
     val bitmapConfig = image.config
 
@@ -66,28 +59,3 @@ fun drawFaceLinesToBitmap(image: Bitmap, facePoints: ArrayList<PointF>,
 
     return bitmap
 }
-/*
-fun getFacePoints(face: Face): ArrayList<FacePoint> {
-    val facePoints = ArrayList<FacePoint>()
-
-    for(landmark in landmarks) {
-        val lm = face.getLandmark(landmark)
-        lm?.let {
-            val fp = FacePoint(lm.position, landmark, FacePointType.LANDMARK, -1)
-            facePoints.add(fp)
-        }
-    }
-
-    for(contour in contours) {
-        val contData = face.getContour(contour)?.points
-        if (contData != null) {
-            for((index, point) in contData.withIndex()) {
-                val fp = FacePoint(point, contour, FacePointType.CONTOUR, index)
-                facePoints.add(fp)
-
-            }
-        }
-    }
-
-    return facePoints
-}*/

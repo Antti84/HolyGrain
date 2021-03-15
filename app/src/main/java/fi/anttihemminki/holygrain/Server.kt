@@ -77,7 +77,7 @@ fun createTestset(name: String, okFunc: (JSONObject) -> Unit, errorFunc: () -> U
     queue.add(jsonRequest)
 }
 
-fun saveTestset(name: String, testSetName: String, testSetIndex: Int, faceData: FaceData, okFunc: (JSONObject) -> Unit, errorFunc: () -> Unit) {
+/*fun saveTestset(name: String, testSetName: String, testSetIndex: Int, faceData: FaceData, okFunc: (JSONObject) -> Unit, errorFunc: () -> Unit) {
     val queue = Volley.newRequestQueue(ACTIVE_ACTIVITY)
     val url = "${server_str}save_distance_data.php"
 
@@ -104,7 +104,7 @@ fun saveTestset(name: String, testSetName: String, testSetIndex: Int, faceData: 
     )
 
     queue.add(jsonRequest)
-}
+}*/
 
 fun sendDistanceData(name: String, testSetName: String, testSetIndex: Int,
                      distances: ArrayList<Double>, time: Long,

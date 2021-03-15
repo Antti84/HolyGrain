@@ -8,7 +8,6 @@ import android.view.View
 import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.*
 import fi.anttihemminki.holygrain.databinding.DistanceActivityBinding
-import fi.anttihemminki.holygrain.facedistance.getFacePoints
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -18,7 +17,7 @@ abstract class DistanceStudyActivity : CameraActivity() {
 
     var testSetState = TestSetState.EI_ALOITETTU
 
-    val testData = ArrayList<FaceData>()
+    //val testData = ArrayList<FaceData>()
 
     lateinit var binding: DistanceActivityBinding
 
