@@ -1,27 +1,18 @@
 package fi.anttihemminki.holygrain
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.facedistance.*
 
 abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface {
 
     lateinit var cameraView: ImageView
-    var testTextView: TextView? = null
-
-    var freezeImage = false
-
-    lateinit var camera: HolyCamera
+    private lateinit var camera: HolyCamera
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +26,7 @@ abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface 
         startCamera()
     }
 
-    fun startCamera() {
+    private fun startCamera() {
         camera.startCamera()
     }
 
@@ -66,46 +57,4 @@ abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface 
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
-
-    /*@SuppressLint("SetTextI18n")
-    override fun receiveFaceImage(image: ImageProxy, time: Long) {
-        if (time > 0) {
-            val now = System.currentTimeMillis()
-            if(testTextView != null)
-                testTextView!!.text = "$now - $time = ${now - time}"
-        }
-        if(!freezeImage)
-            setImageToLayout(image)
-    }
-
-    var drawDotsToImage = false
-    override fun receiveFaceImageAndData(image: ImageProxy, faces: MutableList<Face>, time: Long) {
-
-        if(drawDotsToImage) {
-            var bmp = imageProxyToBitmap(image)
-            if (bmp != null) {
-                for (face in faces) {
-                    bmp = drawFacePointsToBitmap(bmp!!, face)
-                }
-                bmp = bmp!!.flip(-1f, 1f, bmp.width / 2f, bmp.height / 2f)
-                runOnUiThread {
-                    if(!freezeImage)
-                        cameraView.setImageBitmap(bmp)
-                }
-            }
-        } else {
-            receiveFaceImage(image, -1)
-        }
-
-        //
-        receiveFaceData(faces, time)
-    }
-
-    /*@SuppressLint("SetTextI18n")
-    override */open fun receiveFaceData(faces: MutableList<Face>, time: Long) {
-        val now = System.currentTimeMillis()
-        val s = "$now - $time = ${now - time}"
-        if(testTextView != null)
-            testTextView!!.text = s + "\n" + "Num faces: ${faces.size}"
-    }*/
 }

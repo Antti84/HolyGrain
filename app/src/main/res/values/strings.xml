@@ -11,4 +11,6 @@
     <string name="choose_face">Valitse näkyvä kasvo</string>
     <string name="shows_image_from_camera">Shows image from camera</string>
     <string name="sarta_calibration">Aloita kalibrointi</string>
+    <string name="holygrain_distance_study">HolyGrain Distance Study</string>
+    <string name="start">Aloita</string>
 </resources>

@@ -15,15 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HolyGrain"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DistanceMeterActivity">
+        <activity android:name=".MenuActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".distancestudy.DistanceStudyActivity" />
-        <activity android:name=".MenuActivity" />
+        <activity android:name=".DistanceMeterActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

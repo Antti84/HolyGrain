@@ -1,19 +1,13 @@
 package fi.anttihemminki.holygrain
 
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.camera.core.ImageProxy
-import com.google.android.gms.vision.face.Contour
-import com.google.mlkit.vision.face.Face
 import fi.anttihemminki.holygrain.databinding.ActivityDistanceMeterBinding
 import fi.anttihemminki.holygrain.facedistance.*
-import kotlin.math.abs
-import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sqrt
 

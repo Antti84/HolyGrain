@@ -12,7 +12,7 @@ lateinit var ACTIVE_ACTIVITY: AppCompatActivity
 
 abstract class HolyActivity : AppCompatActivity() {
 
-    val screen = Screen()
+    private val screen = Screen()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +37,14 @@ abstract class HolyActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 
-    fun getScreenProps() {
+    private fun getScreenProps() {
         val dm = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(dm)
 
         screen.width = dm.widthPixels
         screen.height = dm.heightPixels
         screen.ppi = dm.densityDpi
-        Log.i(HOLY_TAG, "Screen: ${screen.width}x${screen.height}, ppi: ${screen.ppi}")
+        //Log.i(HOLY_TAG, "Screen: ${screen.width}x${screen.height}, ppi: ${screen.ppi}")
+        Log.i(HOLY_TAG, "$screen")
     }
 }

@@ -3,11 +3,6 @@ package fi.anttihemminki.holygrain.facedistance
 import android.graphics.*
 
 fun drawFacePointsToBitmap(image: Bitmap, facePoints: ArrayList<PointF>): Bitmap {
-    /*try {
-        requireNotNull(face.trackingId)
-    } catch (error: IllegalArgumentException) {
-        return image
-    }*/
 
     val bitmapConfig = image.config
 
@@ -18,10 +13,6 @@ fun drawFacePointsToBitmap(image: Bitmap, facePoints: ArrayList<PointF>): Bitmap
     paint.color = Color.GREEN
     paint.strokeWidth = 5F
     paint.style = Paint.Style.STROKE
-
-    //val facePoints = getFacePoints(face)
-
-    //canvas.drawRect(face.boundingBox, paint)
 
     for(p in facePoints) {
         canvas.drawPoint(p.x, p.y, paint)
@@ -54,7 +45,6 @@ fun drawFaceLinesToBitmap(image: Bitmap, facePoints: Array<PointF>,
                 )
             }
         }
-        //canvas.drawPoint(p.x, p.y, paint)
     }
 
     return bitmap

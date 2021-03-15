@@ -1,12 +1,10 @@
 package fi.anttihemminki.holygrain.facedistance
 
 import android.graphics.PointF
-import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
 import androidx.camera.core.ImageProxy
 import com.google.android.gms.vision.face.Contour
 import com.google.mlkit.vision.face.*
-import fi.anttihemminki.holygrain.holycamera.landmarks
-import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -31,7 +29,7 @@ const val calibrationDistance = 30.0
 class DistanceMeter() {
     val numFacesToCalibration = 30
 
-    var referenceDistances: DoubleArray? = null
+    var referenceDistances = DoubleArray(faceConnections.size)
     var calibrated = false
 
     val defaultMeasurer = object : FaceMeter {
@@ -39,12 +37,14 @@ class DistanceMeter() {
             if(!calibrated) return -2.0
             if(!isPostureCorrect(face)) return -1.0
 
-            val points = FaceData(face).facePoints
+            val points = FaceData(face)
+            if(!points.isOk)
+                return -1.0
             val distances = ArrayList<Double>()
             for((index, connection) in faceConnections.withIndex()) {
-                val p1 = points!![connection[0]]
-                val p2 = points!![connection[1]]
-                val pDist = sqrt((p1.x - p2.x).pow(2) + (p1.y - p2.y))
+                val p1 = points.facePoints!![connection[0]]
+                val p2 = points.facePoints!![connection[1]]
+                val pDist = sqrt((p1.x - p2.x).pow(2) + (p1.y - p2.y).pow(2))
 
                 val cDist = referenceDistances[index]
 
@@ -72,14 +72,16 @@ class DistanceMeter() {
     }
 
     var measurer = defaultMeasurer
+    lateinit var cbd: ArrayList<ArrayList<PointF>>
 
     fun startCalibration() {
         calibrated = false
         val calibrationData = ArrayList<ArrayList<PointF>>()
+        cbd = calibrationData
 
-        for(conn in 0..numPoints-1) {
-            calibrationData.add(ArrayList())
-        }
+        var calibrationArrayReady = false
+
+
 
         measurer = object : FaceMeter {
             override fun measure(face: Face): Double {
@@ -88,6 +90,14 @@ class DistanceMeter() {
                 val points = FaceData(face)
                 if(!points.isOk)
                     return -1.0
+
+                if(!calibrationArrayReady) {
+                    for(conn in 0..points.facePoints!!.size-1) {
+                        calibrationData.add(ArrayList())
+                    }
+
+                    calibrationArrayReady = true
+                }
 
                 for((index, p) in points.facePoints!!.withIndex()) {
                     calibrationData[index].add(p)
@@ -98,9 +108,8 @@ class DistanceMeter() {
                 if(r >= 1.0) {
                     calibrated = true
                     measurer = defaultMeasurer
-                    referenceDistances.clear()
 
-                    for(line in faceConnections) {
+                    for((distIndex, line) in faceConnections.withIndex()) {
                         var sumDist = 0.0
                         var count = 0
 
@@ -113,8 +122,9 @@ class DistanceMeter() {
                                 count++
                             }
                         }
-                        referenceDistances.add(sumDist/count)
+                        referenceDistances!![distIndex] = sumDist/count
                     }
+                    Log.i(TAG, "nonni")
                 }
 
                 return r
@@ -122,16 +132,10 @@ class DistanceMeter() {
 
         }
     }
-
-
 }
 
-class HolyFaceData {
-    val DEX_RANGE = 0..3
-    val SIN_RANGE = 4..7
-
-
-}
+val DEX_RANGE = 0..3
+val SIN_RANGE = 4..7
 
 class FaceData(face: Face) {
     val isOk: Boolean
@@ -186,4 +190,4 @@ val faceConnections = arrayOf(
     arrayOf(7, 5),
     arrayOf(8, 4)
 )
-const val numPoints = 9
+//const val numPoints = 9
