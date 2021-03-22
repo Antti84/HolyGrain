@@ -1,75 +1,88 @@
 package fi.anttihemminki.holygrain
 
-enum class TestSetState(val numMeasures: Int, val hint: String) {
-    EI_ALOITETTU(0, ""),
-    ASETTELE_KASVO(1, "Asettele vain oma naama näkyviin"),
-    VALITE_KASVO(1, "Vain oma naama näkyviin."),
+import kotlin.math.abs
 
-    // ETÄISYYDET
+enum class Eyes(val value: Int) {
+    OA(0),
+    OD(1),
+    OS(2)
+}
 
-    // 25CM
-    OA_SUORA_25(15, "Suorassa. Etäisyys 25cm. Silmät auki."),
-    OD_SUORA_25(15, "Suorassa. Etäisyys 25cm. Sulje vasen."),
-    OS_SUORA_25(15, "Suorassa. Etäisyys 25cm. Sulje oikea."),
-    OD_PEITTO_25(15, "Suorassa. Etäisyys 25cm. Peitä vasen."),
-    OS_PEITTO_25(15, "Suorassa. Etäisyys 25cm. Peitä oikea."),
+val distances = arrayOf(25, 30, 35, 40, 45)
+val eyes = arrayOf(Eyes.OA, Eyes.OD, Eyes.OS)
+val covers = arrayOf("closed", "covered")
+val headDirectionsHoriz = arrayOf(0, 10, -10)
+val headDirectionsVertic = arrayOf(0, 10, -10)
 
-    // 30CM
-    OA_SUORA_30(15, "Suorassa. Etäisyys 30cm. Silmät auki."),
-    OD_SUORA_30(15, "Suorassa. Etäisyys 30cm. Sulje vasen."),
-    OS_SUORA_30(15, "Suorassa. Etäisyys 30cm. Sulje oikea."),
-    OD_PEITTO_30(15, "Suorassa. Etäisyys 30cm. Peitä vasen."),
-    OS_PEITTO_30(15, "Suorassa. Etäisyys 30cm. Peitä oikea."),
+class TestSetState() {
 
-    // 35CM
-    OA_SUORA_35(15, "Suorassa. Etäisyys 35cm. Silmät auki."),
-    OD_SUORA_35(15, "Suorassa. Etäisyys 35cm. Sulje vasen."),
-    OS_SUORA_35(15, "Suorassa. Etäisyys 35cm. Sulje oikea."),
-    OD_PEITTO_35(15, "Suorassa. Etäisyys 35cm. Peitä vasen."),
-    OS_PEITTO_35(15, "Suorassa. Etäisyys 35cm. Peitä oikea."),
+    var currentState = 0
+    val states: Array<TestSetStateData>
 
-    // 35CM LISÄKKEET
+    init {
+        val stateList = ArrayList<TestSetStateData>()
 
-    NAAMANVAANTELY(30, "Suorassa. 35cm. Vääntele naamaa :)."),
-    KAANTO_VASEN(15, "35cm. Käännä pää noin 30 astetta vasemmalla."),
-    KAANTO_OIKEA(15, "35cm. Käännä pää noin 30 astetta oikealle."),
-    KAANTO_YLOS(15, "35cm. Käännä pää noin 20 astetta ylös."),
-    KAANTO_ALAS(15, "35cm. Käännä pää noin 20 astetta alas."),
+        for(distance in distances) {
+            for(eye in eyes) {
+                for(cover in covers) {
+                    for(dirHoriz in headDirectionsHoriz) {
+                        for(dirVert in headDirectionsVertic) {
 
-    // 40CM
-    OA_SUORA_40(15, "Suorassa. Etäisyys 40cm. Silmät auki."),
-    OD_SUORA_40(15, "Suorassa. Etäisyys 40cm. Sulje vasen."),
-    OS_SUORA_40(15, "Suorassa. Etäisyys 40cm. Sulje oikea."),
-    OD_PEITTO_40(15, "Suorassa. Etäisyys 40cm. Peitä vasen."),
-    OS_PEITTO_40(15, "Suorassa. Etäisyys 40cm. Peitä oikea."),
+                            if(distance in arrayOf(25, 35, 40, 45) && dirHoriz != 0 && dirVert != 0) continue
 
-    // 45CM
-    OA_SUORA_45(15, "Suorassa. Etäisyys 45cm. Silmät auki."),
-    OD_SUORA_45(15, "Suorassa. Etäisyys 45cm. Sulje vasen."),
-    OS_SUORA_45(15, "Suorassa. Etäisyys 45cm. Sulje oikea."),
-    OD_PEITTO_45(15, "Suorassa. Etäisyys 45cm. Peitä vasen."),
-    OS_PEITTO_45(15, "Suorassa. Etäisyys 45cm. Peitä oikea.");
-
-    // NAAMAN ERI SIJAINNIT
-
-
-
-    // NAAMANVÄÄNTELYT YMS
-
-
-
-    // USEITA NAAMOJA
-
-    fun getIndex(): Int {
-        for((index, s) in values().withIndex()) {
-            if(s == this) return index
+                            if(eye == Eyes.OA) {
+                                if(cover == covers[0]) {
+                                    val item = TestSetStateData( distance, eye, "open", dirHoriz, dirVert)
+                                    stateList.add(item)
+                                }
+                            } else {
+                                val item = TestSetStateData( distance, eye, cover, dirHoriz, dirVert)
+                                stateList.add(item)
+                            }
+                        }
+                    }
+                }
+            }
         }
-        return -1
+
+        states = stateList.toTypedArray()
     }
 
-    fun getNext(): TestSetState? {
-        val i = getIndex()
-        if(i == values().size - 1) return null
-        return values()[i+1]
+    //fun getIndex(): Int { }
+
+    //fun getNext(): TestSetState? { }
+}
+
+data class TestSetStateData(
+        val distance: Int,
+        val eye: Eyes,
+        val cover: String,
+        val horizDir: Int,
+        val vertDir: Int
+)
+
+fun testSetStateDataToPositionString(state: TestSetStateData): String {
+
+    val coverString = if(state.eye == Eyes.OA) {
+        "Molemmat silmät auki"
+    } else {
+        val coveredEyeStr = if(state.eye == Eyes.OD) "vasen" else "oikea"
+        if(state.cover == "closed") {
+            "Sulje $coveredEyeStr silmä"
+        } else {
+            "Peitä $coveredEyeStr silmä kämmenellä"
+        }
     }
+
+    val headTurnHorizStr = if(state.horizDir == 0) "Pää suorassa" else {
+        val dirStr = if(state.horizDir < 0) "vasemmalle" else "oikealle"
+        "Käännä päätä noin ${abs(state.horizDir)} astetta ${dirStr}"
+    }
+
+    val headTurnVertStr = if(state.vertDir == 0) "Pää pystysuorassa" else {
+        val dirStr = if(state.vertDir < 0) "alaspäin" else "ylöspäin"
+        "Käännä päätä noin ${abs(state.vertDir)} astetta ${dirStr}"
+    }
+
+    return "Etäisyys: ${state.distance}cm\n$coverString\n${headTurnHorizStr}\n${headTurnVertStr}"
 }
