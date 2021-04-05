@@ -18,12 +18,6 @@ class MenuActivity : HolyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val s = TestSetState()
-        for(ss in s.states) {
-            Log.i("STATE", testSetStateDataToPositionString(ss))
-        }
-        Log.i("STATES LENGTH", s.states.size.toString())
-
         binding = ActivityMenuBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -41,6 +35,8 @@ class MenuActivity : HolyActivity() {
             override fun afterTextChanged(s: Editable?) { }
 
         })
+
+        testServer( { binding.serverStatusTxt.text = "Palvelin toimii." }, { binding.serverStatusTxt.text = "Palvelin ei toimi." })
     }
 
     fun goToDistanceDataCollection(view: View) {

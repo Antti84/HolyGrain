@@ -1,20 +1,21 @@
 package fi.anttihemminki.holygrain
 
+import fi.anttihemminki.holygrain.facedistance.Eyes
 import kotlin.math.abs
 
-enum class Eyes(val value: Int) {
-    OA(0),
-    OD(1),
-    OS(2)
-}
-
-val distances = arrayOf(25, 30, 35, 40, 45)
+val distances = arrayOf(30, 25, 35, 40, 45)
 val eyes = arrayOf(Eyes.OA, Eyes.OD, Eyes.OS)
-val covers = arrayOf("closed", "covered")
-val headDirectionsHoriz = arrayOf(0, 10, -10)
-val headDirectionsVertic = arrayOf(0, 10, -10)
+//val covers = arrayOf("closed", "covered")
 
 class TestSetState() {
+    fun getCurrentState(): TestSetStateData {
+        return states[currentState]
+    }
+
+    fun goToNextState(): Boolean {
+        currentState++
+        return currentState < states.size
+    }
 
     var currentState = 0
     val states: Array<TestSetStateData>
@@ -24,24 +25,18 @@ class TestSetState() {
 
         for(distance in distances) {
             for(eye in eyes) {
-                for(cover in covers) {
-                    for(dirHoriz in headDirectionsHoriz) {
-                        for(dirVert in headDirectionsVertic) {
+                //for(cover in covers) {
 
-                            if(distance in arrayOf(25, 35, 40, 45) && dirHoriz != 0 && dirVert != 0) continue
-
-                            if(eye == Eyes.OA) {
-                                if(cover == covers[0]) {
-                                    val item = TestSetStateData( distance, eye, "open", dirHoriz, dirVert)
-                                    stateList.add(item)
-                                }
-                            } else {
-                                val item = TestSetStateData( distance, eye, cover, dirHoriz, dirVert)
-                                stateList.add(item)
-                            }
-                        }
-                    }
-                }
+                    //if(eye == Eyes.OA) {
+                    //    if(cover == covers[0]) {
+                    //        val item = TestSetStateData( distance, eye, "open")
+                    //        stateList.add(item)
+                    //    }
+                    //} else {
+                    val item = TestSetStateData( distance, eye)
+                    stateList.add(item)
+                    //}
+                //}
             }
         }
 
@@ -56,9 +51,7 @@ class TestSetState() {
 data class TestSetStateData(
         val distance: Int,
         val eye: Eyes,
-        val cover: String,
-        val horizDir: Int,
-        val vertDir: Int
+        //val cover: String,
 )
 
 fun testSetStateDataToPositionString(state: TestSetStateData): String {
@@ -66,23 +59,13 @@ fun testSetStateDataToPositionString(state: TestSetStateData): String {
     val coverString = if(state.eye == Eyes.OA) {
         "Molemmat silmät auki"
     } else {
-        val coveredEyeStr = if(state.eye == Eyes.OD) "vasen" else "oikea"
-        if(state.cover == "closed") {
+        if(state.eye == Eyes.OD) "Peitä vasen silmä" else "Peitä oikea silmä"
+        /*if(state.cover == "closed") {
             "Sulje $coveredEyeStr silmä"
         } else {
             "Peitä $coveredEyeStr silmä kämmenellä"
-        }
+        }*/
     }
 
-    val headTurnHorizStr = if(state.horizDir == 0) "Pää suorassa" else {
-        val dirStr = if(state.horizDir < 0) "vasemmalle" else "oikealle"
-        "Käännä päätä noin ${abs(state.horizDir)} astetta ${dirStr}"
-    }
-
-    val headTurnVertStr = if(state.vertDir == 0) "Pää pystysuorassa" else {
-        val dirStr = if(state.vertDir < 0) "alaspäin" else "ylöspäin"
-        "Käännä päätä noin ${abs(state.vertDir)} astetta ${dirStr}"
-    }
-
-    return "Etäisyys: ${state.distance}cm\n$coverString\n${headTurnHorizStr}\n${headTurnVertStr}"
+    return "Etäisyys: ${state.distance}cm\n$coverString"
 }

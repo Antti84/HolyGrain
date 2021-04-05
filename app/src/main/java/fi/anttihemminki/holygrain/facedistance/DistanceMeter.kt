@@ -10,14 +10,19 @@ import kotlin.math.sqrt
 
 const val TAG = "DistanceMeter"
 
+enum class Eyes(val value: Int) {
+    OA(0),
+    OD(1),
+    OS(2)
+}
 
 data class RawFaceData(val imageProxy: ImageProxy, val faces: MutableList<Face>,
                        val timeStamp: Long)
 interface FaceMeter {
-    fun measure(face: Face): Double
+    fun measure(face: Face, measureSide: Eyes): Double
 }
 
-val rotationLimits = -15..15
+val rotationLimits = -45..45
 fun isPostureCorrect(face: Face): Boolean {
     if(face.headEulerAngleX.toInt() !in rotationLimits) return false
     if(face.headEulerAngleY.toInt() !in rotationLimits) return false
@@ -33,7 +38,7 @@ class DistanceMeter() {
     var calibrated = false
 
     val defaultMeasurer = object : FaceMeter {
-        override fun measure(face: Face): Double {
+        override fun measure(face: Face, measureSide: Eyes): Double {
             if(!calibrated) return -2.0
             if(!isPostureCorrect(face)) return -1.0
 
@@ -41,7 +46,15 @@ class DistanceMeter() {
             if(!points.isOk)
                 return -1.0
             val distances = ArrayList<Double>()
-            for((index, connection) in faceConnections.withIndex()) {
+
+            var connectionsToTest = faceConnections
+            if(measureSide == Eyes.OD) {
+                connectionsToTest = faceConnections.slice(DEX_RANGE).toTypedArray()
+            } else if(measureSide == Eyes.OS) {
+                connectionsToTest = faceConnections.slice(SIN_RANGE).toTypedArray()
+            }
+
+            for((index, connection) in connectionsToTest.withIndex()) {
                 val p1 = points.facePoints!![connection[0]]
                 val p2 = points.facePoints!![connection[1]]
                 val pDist = sqrt((p1.x - p2.x).pow(2) + (p1.y - p2.y).pow(2))
@@ -84,7 +97,7 @@ class DistanceMeter() {
 
 
         measurer = object : FaceMeter {
-            override fun measure(face: Face): Double {
+            override fun measure(face: Face, measureSide: Eyes): Double {
                 if(!isPostureCorrect(face)) return -1.0
                 var r = 0.0
                 val points = FaceData(face)
@@ -134,8 +147,8 @@ class DistanceMeter() {
     }
 }
 
-val DEX_RANGE = 0..3
-val SIN_RANGE = 4..7
+val DEX_RANGE = 4..7
+val SIN_RANGE = 0..3
 
 class FaceData(face: Face) {
     val isOk: Boolean

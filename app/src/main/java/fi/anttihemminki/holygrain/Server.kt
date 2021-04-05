@@ -7,7 +7,7 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import org.json.JSONObject
 
-val server_str = "http://192.168.100.101/hg_backend/" // http://www.anttihemminki.fi/HolyGrainServer/
+val server_str = "http://192.168.100.110/hg_backend/" // http://www.anttihemminki.fi/HolyGrainServer/
 
 fun testServer(okFunc: () -> Unit, errorFunc: () -> Unit) {
     val queue = Volley.newRequestQueue(ACTIVE_ACTIVITY)
@@ -106,19 +106,31 @@ fun createTestset(name: String, okFunc: (JSONObject) -> Unit, errorFunc: () -> U
     queue.add(jsonRequest)
 }*/
 
-fun sendDistanceData(name: String, testSetName: String, testSetIndex: Int,
-                     distances: ArrayList<Double>, time: Long,
+fun sendDistanceData(data: DistanceData,
                      okFunc: (JSONObject) -> Unit, errorFunc: () -> Unit) {
     val queue = Volley.newRequestQueue(ACTIVE_ACTIVITY)
     val url = "${server_str}save_distance_data.php"
 
+
+
     val json = JSONObject()
-    json.put("test_person_name", name)
-    json.put("test_set_name", testSetName)
-    json.put("test_set_index", testSetIndex)
-    json.put("model", android.os.Build.MODEL)
-    json.put("app_time", time)
-    json.put("distances", Gson().toJson(distances))
+    json.put("id", data.ID)
+
+    //json.put("covertype", data.testState.cover)
+    json.put("distance_target", data.testState.distance)
+    json.put("eye", data.testState.eye)
+
+    json.put("test_set_index", data.index)
+
+    json.put("rotx", data.rotx)
+    json.put("roty", data.roty)
+    json.put("rotz", data.rotz)
+
+    json.put("measure_time", data.time)
+    json.put("distance_measured", data.distance)
+
+    json.put("right_eye_open_prob", data.rightEyeOpenProb)
+    json.put("left_eye_open_prob", data.leftEyeOpenProb)
 
     val jsonRequest = JsonObjectRequest(
             Request.Method.POST,
