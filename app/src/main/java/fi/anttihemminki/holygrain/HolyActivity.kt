@@ -8,16 +8,18 @@ import android.view.View
 
 const val HOLY_TAG = "HolyGrain"
 
-lateinit var ACTIVE_ACTIVITY: AppCompatActivity
+lateinit var ACTIVE_ACTIVITY: HolyActivity
 
 abstract class HolyActivity : AppCompatActivity() {
 
-    private val screen = Screen()
+    val screen = Screen()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ACTIVE_ACTIVITY = this
+
+        getScreenProps()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

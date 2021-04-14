@@ -11,7 +11,7 @@ import fi.anttihemminki.holygrain.facedistance.*
 
 abstract class CameraActivity : HolyActivity(), HolyCameraReceiveImageInterface {
 
-    lateinit var cameraView: ImageView
+    var cameraView: ImageView? = null
     private lateinit var camera: HolyCamera
 
     override fun onCreate(savedInstanceState: Bundle?) {

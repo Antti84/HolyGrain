@@ -13,4 +13,5 @@
     <string name="sarta_calibration">Aloita kalibrointi</string>
     <string name="holygrain_distance_study">HolyGrain Distance Study</string>
     <string name="start">Aloita</string>
+    <string name="start_calibration">Aloita kalibrointi</string>
 </resources>

@@ -24,7 +24,7 @@ data class DistanceData(
         val leftEyeOpenProb: Float, val rightEyeOpenProb: Float
 )
 
-class DistanceMeterActivity : CameraActivity() {
+open class DistanceMeterActivity : CameraActivity() {
 
     private lateinit var binding: ActivityDistanceMeterBinding
 
@@ -32,7 +32,7 @@ class DistanceMeterActivity : CameraActivity() {
 
     private var drawFacePoints = true
 
-    private var distanceMeter = DistanceMeter()
+    protected var distanceMeter = DistanceMeter()
 
     private var state = DistanceMeterActivityState.HEAD_POSTURE
 
@@ -109,7 +109,7 @@ class DistanceMeterActivity : CameraActivity() {
     }
 
     override fun receiveImage(imageProxy: ImageProxy, timeStamp: Long) {
-        Log.i(HOLY_TAG, "ReceiveImage: $imageProxy, time: $timeStamp")
+        //Log.i(HOLY_TAG, "ReceiveImage: $imageProxy, time: $timeStamp")
 
         faceDetector.analyze(imageProxy) { faces ->
             val data = RawFaceData(imageProxy, faces, timeStamp)
@@ -118,15 +118,15 @@ class DistanceMeterActivity : CameraActivity() {
     }
 
     fun setBmpToView(bmp: Bitmap?) {
-        if(bmp != null) {
-            val bmp2 = bmp.flip(-1f, 1f, bmp.width/2f, bmp.height/2f)
+        if (cameraView != null && bmp != null) {
+            val bmp2 = bmp.flip(-1f, 1f, bmp.width / 2f, bmp.height / 2f)
             this.runOnUiThread {
-                cameraView.setImageBitmap(bmp2)
+                cameraView!!.setImageBitmap(bmp2)
             }
         }
     }
 
-    fun receiveFaces(rawFaceData: RawFaceData) {
+    open fun receiveFaces(rawFaceData: RawFaceData) {
         var bmp = imageProxyToBitmap(rawFaceData.imageProxy)
         rawFaceData.imageProxy.close()
 
