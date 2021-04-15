@@ -1,5 +1,9 @@
 package fi.anttihemminki.holygrain.game
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +12,15 @@ import fi.anttihemminki.holygrain.*
 import fi.anttihemminki.holygrain.databinding.ActivityHolyGameBinding
 import fi.anttihemminki.holygrain.facedistance.*
 
-const val TESTI = true
+const val TESTI = false
+
+enum class Direction {UP, RIGHT, DOWN, LEFT}
 
 class HolyGameActivity : DistanceMeterActivity() {
 
     lateinit var binding: ActivityHolyGameBinding
+
+    val visusManager = VisusManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,22 +39,77 @@ class HolyGameActivity : DistanceMeterActivity() {
         }
     }
 
+    fun showBirds(show: Boolean) {
+        val visibility = if(show) View.VISIBLE else View.INVISIBLE
+
+        binding.gameBirdRight.visibility = visibility
+        binding.gameBirdLeft.visibility = visibility
+        binding.gameBirdTop.visibility = visibility
+        binding.gameBirdBottom.visibility = visibility
+    }
+
+    fun enableBird(enable: Boolean, bird: Direction) {
+        when(bird) {
+            Direction.UP -> binding.gameBirdTop.isEnabled = enable
+            Direction.RIGHT -> binding.gameBirdRight.isEnabled = enable
+            Direction.DOWN -> binding.gameBirdBottom.isEnabled = enable
+            Direction.LEFT -> binding.gameBirdLeft.isEnabled = enable
+        }
+    }
+
+    fun enableBirds(enable: Boolean) {
+        binding.gameBirdTop.isEnabled = enable
+        binding.gameBirdRight.isEnabled = enable
+        binding.gameBirdBottom.isEnabled = enable
+        binding.gameBirdLeft.isEnabled = enable
+    }
+
     fun toggleCalibrationBtn(show: Boolean = true, enable: Boolean = true) {
         binding.gameStartCalibrationBtn.isEnabled = enable
         binding.gameStartCalibrationBtn.visibility = if(show) View.VISIBLE else View.INVISIBLE
     }
 
+    var boxColor = Color.rgb(0, 0, 0)
+    var bgColor = Color.rgb(255, 255, 255)
+    fun drawBox(gap: Int, direction: Direction): Bitmap {
+        val boxSize = gap * 5
+        val bitmap = Bitmap.createBitmap(boxSize, boxSize, Bitmap.Config.ARGB_8888)
+
+        val canvas = Canvas(bitmap)
+        val paint = Paint()
+
+        paint.color = boxColor
+        canvas.drawRect(0F, 0F, boxSize.toFloat(), boxSize.toFloat(), paint)
+
+        paint.color = bgColor
+        canvas.drawRect(gap.toFloat(), gap.toFloat(), (gap*4).toFloat(), (gap*4).toFloat(), paint)
+
+        when(direction) {
+            Direction.UP -> canvas.drawRect((gap*2).toFloat(), 0F, (gap*3).toFloat(), gap.toFloat(), paint)
+            Direction.RIGHT -> canvas.drawRect((gap*4).toFloat(), (gap*2).toFloat(), boxSize.toFloat(), (gap*3).toFloat(), paint)
+            Direction.DOWN -> canvas.drawRect((gap*2).toFloat(), (gap*4).toFloat(), (gap*3).toFloat(), boxSize.toFloat(), paint)
+            Direction.LEFT -> canvas.drawRect(0F, (gap*2).toFloat(), gap.toFloat(), (gap*3).toFloat(), paint)
+        }
+
+        return bitmap
+    }
+
     fun showGameBoard() {
         binding.gameFaceImageView.visibility = View.INVISIBLE
         toggleCalibrationBtn(false, false)
-        binding.gameBirdRight.visibility = View.VISIBLE
-        binding.gameBirdLeft.visibility = View.VISIBLE
+
+        showBirds(true)
 
         val lento_right = binding.gameBirdRight.drawable as AnimationDrawable
         lento_right.start()
 
         val lento_left = binding.gameBirdLeft.drawable as AnimationDrawable
         lento_left.start()
+
+        binding.boxImage.visibility = View.VISIBLE
+        binding.boxImage.setImageBitmap(drawBox(10, Direction.DOWN))
+
+        enableBirds(true)
     }
 
     fun notOneFaceVisibleCallback() {
@@ -57,8 +120,9 @@ class HolyGameActivity : DistanceMeterActivity() {
         Log.i(TAG, "Hyvä, yksi naama näkyy.")
     }
 
-    fun getFaceDistance(distance: Double, time: Long) {
-        Log.i(TAG, "Distance: $distance, time: $time")
+    private fun getFaceDistance(distance: Double, time: Long) {
+        //Log.i(TAG, "Distance: $distance, time: $time")
+        visusManager.receiveDistance(distance, time)
     }
 
     override fun receiveFaces(rawFaceData: RawFaceData) {
@@ -134,6 +198,15 @@ class HolyGameActivity : DistanceMeterActivity() {
         state = HolyGameState.CALIBRATING
         distanceMeter.startCalibration()
     }
+
+    fun handleBirdClick(direction: Direction) {
+        Log.i(TAG, "Bird $direction clicked")
+    }
+
+    fun rightBirdClick(view: View) { handleBirdClick(Direction.RIGHT) }
+    fun bottomBirdClick(view: View) { handleBirdClick(Direction.DOWN) }
+    fun topBirdClick(view: View) { handleBirdClick(Direction.UP) }
+    fun leftBirdClick(view: View) { handleBirdClick(Direction.LEFT) }
 }
 
 enum class HolyGameState { NOT_CALIBRATED, CALIBRATING, CALIBRATED }

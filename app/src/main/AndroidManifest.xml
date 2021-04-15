@@ -20,7 +20,7 @@
         <activity android:name=".MenuActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".GameMenuActivity"
+            android:name=".game.GameMenuActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

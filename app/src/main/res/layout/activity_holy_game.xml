@@ -28,16 +28,29 @@
         android:onClick="gameStartCalibration" />
 
     <ImageView
+        android:id="@+id/boxImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible" />
+
+    <ImageView
         android:id="@+id/gameBirdRight"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:scaleX="-1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginRight="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="10px"
+        app:layout_constraintStart_toEndOf="@id/boxImage"
         android:visibility="invisible"
-        android:src="@drawable/keltainen_anim" />
+        android:src="@drawable/keltainen_anim"
+        tools:ignore="PxUsage"
+        android:clickable="true"
+        android:onClick="rightBirdClick" />
 
     <ImageView
         android:id="@+id/gameBirdLeft"
@@ -45,21 +58,42 @@
         android:layout_height="64dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/boxImage"
+        android:layout_marginEnd="10px"
         android:visibility="invisible"
-        android:src="@drawable/keltainen_anim_left" />
+        android:src="@drawable/keltainen_anim_left"
+        tools:ignore="PxUsage"
+        android:clickable="true"
+        android:onClick="leftBirdClick" />
 
     <ImageView
         android:id="@+id/gameBirdTop"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:scaleX="-1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginRight="16dp"
+        android:rotation="90"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/boxImage"
+        android:layout_marginBottom="10px"
         android:visibility="invisible"
-        android:src="@drawable/keltainen_anim" />
+        android:src="@drawable/keltainen_anim"
+        tools:ignore="PxUsage"
+        android:clickable="true"
+        android:onClick="topBirdClick" />
+
+    <ImageView
+        android:id="@+id/gameBirdBottom"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:rotation="270"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/boxImage"
+        android:layout_marginTop="10px"
+        android:visibility="invisible"
+        android:src="@drawable/keltainen_anim"
+        tools:ignore="PxUsage"
+        android:clickable="true"
+        android:onClick="bottomBirdClick" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
